@@ -1,0 +1,19 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:3.4.0
+    ports:
+    - "27017:27017"
+    volumes:
+    - dbvolume01:/data
+    environment: {
+      AUTH: "no"
+    }
+  app:
+    build: .
+    ports:
+    - "4000:4000"
+    links:
+     - mongodb
+volumes:
+  dbvolume01: {}

@@ -17,29 +17,29 @@ type Person struct {
 }
 
 var (
-    mgoSession *mgo.Session
+	mgoSession *mgo.Session
 )
 
 func ConnectDb() {
-    if mgoSession == nil {
-        session, err := mgo.Dial(mongodbUri)
-        if err != nil {
-            panic(err)
-        }
-        session.SetMode(mgo.Monotonic, true)
-        mgoSession = session
-    }
-    return
+	if mgoSession == nil {
+		session, err := mgo.Dial(mongodbUri)
+		if err != nil {
+			panic(err)
+		}
+		session.SetMode(mgo.Monotonic, true)
+		mgoSession = session
+	}
+	return
 }
 
 func GetDbSession() *mgo.Session {
 	if mgoSession == nil {
-        ConnectDb()
+		ConnectDb()
 	}
 	return mgoSession
 }
 
 func CloseDb() {
-    mgoSession.Close()
-    return
+	mgoSession.Close()
+	return
 }

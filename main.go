@@ -39,7 +39,7 @@ func main() {
 	}))
 	m.Use(macaron.Static("public"))
 	m.Use(macaron.Renderer(macaron.RenderOptions{
-		Directory: "/go/src/app/templates",
+		Directory: "./templates",
 	}))
 
 	m.Use(func(ctx *macaron.Context) {
@@ -53,12 +53,13 @@ func main() {
 	m.Get("/", func(ctx *macaron.Context) {
 		ctx.Redirect("/api", 302)
 	})
-	m.Get("/api", func(ctx *macaron.Context) {
+	m.Get("/api", func(ctx *macaron.Context, f *session.Flash) {
+		f.Success("Go works successful")
 		ctx.Data["Headline"] = "API Docs"
 		ctx.HTML(200, "apidoc")
 	})
 
-	m.Group("/persons", func() {
+	m.Group("/api/persons", func() {
 		m.Get("/", overviewHandler)
 		m.Get("/:id", detailHandler)
 		m.Post("/", binding.Bind(Person{}), createHandler)

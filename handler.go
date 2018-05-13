@@ -11,12 +11,13 @@ import (
 func overviewHandler(ctx *macaron.Context) {
 	db := GetDbSession()
 	c := db.DB("golang").C("people")
-	var results []Person
+	var results []Person	
 	err := c.Find(bson.M{}).All(&results)
 	if err != nil {
 		panic(err)
 	}
-	ctx.JSON(200, &results)
+	mapResults := map[string][]Person{"data": results}
+	ctx.JSON(200, &mapResults)
 }
 
 func detailHandler(ctx *macaron.Context) {
@@ -32,7 +33,8 @@ func detailHandler(ctx *macaron.Context) {
 		}).Error("Error")
 		ctx.JSON(404, map[string]string{"message": "not found", "id": ctx.Params("id")})
 	} else {
-		ctx.JSON(200, &result)
+		mapResults := map[string]Person{"data": result}
+	    ctx.JSON(200, &mapResults)
 	}
 }
 
@@ -41,7 +43,10 @@ func createHandler(ctx *macaron.Context, person Person) {
 	c := db.DB("golang").C("people")
 	t := time.Now()
 	id := bson.NewObjectId()
-	err := c.Insert(&Person{ID: id, Name: person.Name, Age: person.Age, Time: fmt.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second())})
+	err := c.Insert(&Person{ID: id,
+							Name: person.Name,
+							Age: person.Age,
+							Time: fmt.Sprintf("%02d:%02d:%02d", t.Hour(), t.Minute(), t.Second())})
 	if err != nil {
 		log.WithFields(log.Fields{
 			"error":  err,

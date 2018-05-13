@@ -1,6 +1,7 @@
 FROM golang:latest
 
 ADD . /go/src/app/
+WORKDIR /go/src/app/
 
 RUN go get labix.org/v2/mgo
 RUN go get labix.org/v2/mgo/bson
